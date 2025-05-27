@@ -1,3 +1,5 @@
+__all__ = ['parser_json']
+
 import json
 
 def parser_json(filepath):
