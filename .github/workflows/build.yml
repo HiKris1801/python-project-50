@@ -1,45 +1,37 @@
-name: SonarCloud Analysis
+name: Python CI
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  - push
+  - pull_request
 
 jobs:
-  sonarcloud:
-    name: SonarCloud Scan
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Install uv
+      - name: Install dependencies
         run: |
-          curl -Ls https://astral.sh/uv/install.sh | sh
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          pip install uv
+          make install
+      - name: Run linter and pytest
+        run: |
+          make check
+      - name: Run test coverage
+        run: |
+          make test-coverage
 
-      - name: Sync dependencies
-        run: uv sync
-
-      - name: Install coverage and pytest (optional, future use)
-        run: uv pip install coverage pytest
-
-      - name: Generate dummy coverage.xml (no tests yet)
-        run: echo '<?xml version="1.0"?><coverage></coverage>' > coverage.xml
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v1
-        with:
-          projectKey: HiKris1801_python-project-50
-          organization: hikris1801
+      - name: SonarQubeScan
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=lyovaparsyan94_python-project-50
+            -Dsonar.organization=lyovaparsyan94
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.coverage.exclusions=tests/**
+            -Dsonar.exclusions=tests/**
