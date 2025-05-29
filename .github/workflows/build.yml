@@ -1,0 +1,48 @@
+name: SonarCloud Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonarcloud:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: |
+          curl -Ls https://astral.sh/uv/install.sh | sh
+
+      - name: Sync dependencies
+        run: |
+          ~/.cargo/bin/uv sync
+          ~/.cargo/bin/uv pip install coverage
+
+      - name: Run tests and generate coverage report
+        run: |
+          coverage run -m pytest
+          coverage xml
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectKey: HiKris1801_python-project-50    
+          organization: hikris1801                     
+          token: ${{ secrets.SONAR_TOKEN }}
+          args: >
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.coverage.exclusions=**/tests/**
+            -Dsonar.exclusions=**/tests/**
