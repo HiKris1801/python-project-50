@@ -1,6 +1,6 @@
 from gendiff.cli import cli
-from gendiff.modules.parser import parser_json
 from gendiff.modules.diff import generate_diff
+from gendiff.modules.parser import parser_json
 
 
 def main():
@@ -11,7 +11,6 @@ def main():
     dict2 = parser_json(filepath2)
     diff = generate_diff(dict1, dict2)
     print(diff)
-
 
 
 if __name__ == "__main__":

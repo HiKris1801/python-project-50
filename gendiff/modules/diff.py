@@ -1,6 +1,8 @@
 _all__ = ['generate_diff']
+
+
 def generate_diff(filepath1, filepath2):
-    result_diff="{ \n"
+    result_diff = "{ \n"
     dict1 = filepath1
     dict2 = filepath2
     for key in sorted(set(dict1.keys()) | set(dict2.keys())):
