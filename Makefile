@@ -10,6 +10,9 @@ lint:
 	uv run ruff check gendiff
 test:
 	uv run pytest
+check:
+	uv run ruff check gendiff
+	uv run pytest
 test-coverage:
 	uv run pytest --cov=gendiff --cov-report=xml:coverage.xml
 rebuild: lock install build package-install
