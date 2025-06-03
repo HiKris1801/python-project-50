@@ -2,6 +2,7 @@ _all__ = ['generate_diff']
 
 
 def generate_diff(filepath1, filepath2):
+    
     result_diff = "{ \n"
     dict1 = filepath1
     dict2 = filepath2

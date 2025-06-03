@@ -1,6 +1,6 @@
 from gendiff.cli import cli
 from gendiff.modules.diff import generate_diff
-from gendiff.modules.parser import parser_json
+from gendiff.modules.parser_json import parser_json
 
 
 def main():
