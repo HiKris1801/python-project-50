@@ -1,5 +1,6 @@
 
-from gendiff.modules import parser_json, parser_yaml
+from gendiff.modules.parser_json import parser_json
+from gendiff.modules.parser_yaml import parser_yaml
 
 __all__ = ['get_parser_by_extension']
 

@@ -1,7 +1,6 @@
 from gendiff.cli import cli
+from gendiff.formatters.stylish import format_stylish
 from gendiff.modules.diff import generate_diff
-from gendiff.modules.parser_json import parser_json
-from gendiff.modules.parser_yaml import parser_yaml
 from gendiff.modules.file_extension import get_file_extension
 from gendiff.modules.parser_by_extension import get_parser_by_extension
 
@@ -18,7 +17,8 @@ def main():
     dict1 = parser1(filepath1)
     dict2 = parser2(filepath2)
     diff = generate_diff(dict1, dict2)
-    print(diff)
+    result_format = format_stylish(diff)
+    print(result_format)
 
 
 if __name__ == "__main__":

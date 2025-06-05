@@ -1,25 +1,31 @@
-def format_stylish(list_diff):
-    """
-    Format the difference between two dictionaries in a stylish way.
+def format_stylish(diff_list):
+    def stringify(value):
+        if isinstance(value, bool):
+            return "true" if value else "false"
+        if value is None:
+            return "null"
+        return str(value)
 
-    Args:
-        dict1 (dict): The first dictionary.
-        dict2 (dict): The second dictionary.
+    lines = ["{"]
 
-    Returns:
-        str: A string representing the difference in a stylish format.
-    """
-    result_diff_print = "{ \n"
-    for key in sorted(set(dict1.keys()) | set(dict2.keys())):
-        if key in dict1 and key in dict2:
-            if dict1[key] == dict2[key]:
-                result_diff += f"  {key}: {dict1[key]}\n"
-            else:
-                result_diff += f"- {key}: {dict1[key]}\n"
-                result_diff += f"+ {key}: {dict2[key]}\n"
-        elif key in dict1:
-            result_diff += f"- {key}: {dict1[key]}\n"
-        elif key in dict2:
-            result_diff += f"+ {key}: {dict2[key]}\n"
-    result_diff += "} \n"
-    return result_diff
+    for record in diff_list:
+        key = record["key"]
+        status = record["status"]
+
+        if status == "unchanged":
+            val = stringify(record["value"])
+            lines.append(f"    {key}: {val}")
+        elif status == "removed":
+            val = stringify(record["value"])
+            lines.append(f"  - {key}: {val}")
+        elif status == "added":
+            val = stringify(record["value"])
+            lines.append(f"  + {key}: {val}")
+        elif status == "changed":
+            old_val = stringify(record["old_value"])
+            new_val = stringify(record["new_value"])
+            lines.append(f"  - {key}: {old_val}")
+            lines.append(f"  + {key}: {new_val}")
+
+    lines.append("}")
+    return "\n".join(lines)
