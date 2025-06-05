@@ -1,4 +1,4 @@
-def format_stylish(dict1, dict2):
+def format_stylish(list_diff):
     """
     Format the difference between two dictionaries in a stylish way.
 
@@ -9,7 +9,7 @@ def format_stylish(dict1, dict2):
     Returns:
         str: A string representing the difference in a stylish format.
     """
-    result_diff = "{ \n"
+    result_diff_print = "{ \n"
     for key in sorted(set(dict1.keys()) | set(dict2.keys())):
         if key in dict1 and key in dict2:
             if dict1[key] == dict2[key]:
