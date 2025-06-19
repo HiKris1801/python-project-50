@@ -22,6 +22,7 @@ Useful for configuration management, debugging, and understanding changes betwee
 
 [![asciicast](https://asciinema.org/a/Vts1EunxaI6JLQEygB5qK1JvZ.svg)](https://asciinema.org/a/Vts1EunxaI6JLQEygB5qK1JvZ)
 
+[![asciicast](https://asciinema.org/a/zBdCr2DgCPH7n3HjrsVmyW5rz.svg)](https://asciinema.org/a/zBdCr2DgCPH7n3HjrsVmyW5rz)
 
 ## Installation and usage
 
@@ -30,7 +31,7 @@ Useful for configuration management, debugging, and understanding changes betwee
 
 ```sh
 git clone https://github.com/HiKris1801/python-project-50.git
-cd python-project-49
+cd python-project-50
 ```
 3. Run the script:
 ```sh

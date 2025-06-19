@@ -1,34 +1,56 @@
 def generate_diff(dict1, dict2):
     diff_list = []
     all_keys = sorted(set(dict1.keys()) | set(dict2.keys()))
+
     if not all_keys:
         return diff_list
+
     for key in all_keys:
+        val1 = dict1.get(key)
+        val2 = dict2.get(key)
+
+        # если ключ есть в обоих словарях
         if key in dict1 and key in dict2:
-            if dict1[key] == dict2[key]:
+            # если оба значения — словари, сравниваем рекурсивно
+            if isinstance(val1, dict) and isinstance(val2, dict):
+                nested_diff = generate_diff(val1, val2)
+                diff_list.append({
+                    "key": key,
+                    "status": "nested",
+                    "children": nested_diff
+                })
+
+            # если значения равны
+            elif val1 == val2:
                 diff_list.append({
                     "key": key,
                     "status": "unchanged",
-                    "value": dict1[key]
+                    "value": val1
                 })
+
+            # если значения разные
             else:
                 diff_list.append({
                     "key": key,
                     "status": "changed",
-                    "old_value": dict1[key],
-                    "new_value": dict2[key]
+                    "old_val": val1,
+                    "new_val": val2
                 })
+
+        # если ключ только в dict1
         elif key in dict1:
             diff_list.append({
                 "key": key,
                 "status": "removed",
-                "value": dict1[key]
+                "value": val1
             })
+
+        # если ключ только в dict2
         else:  # key in dict2
             diff_list.append({
                 "key": key,
                 "status": "added",
-                "value": dict2[key]
+                "value": val2
             })
 
     return diff_list

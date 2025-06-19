@@ -16,8 +16,8 @@ def main():
 
     dict1 = parser1(filepath1)
     dict2 = parser2(filepath2)
-    diff = generate_diff(dict1, dict2)
-    result_format = format_stylish(diff)
+    diff_tree = generate_diff(dict1, dict2)
+    result_format = format_stylish(diff_tree)
     print(result_format)
 
 
