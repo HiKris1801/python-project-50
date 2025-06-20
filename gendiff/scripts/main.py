@@ -1,5 +1,4 @@
 from gendiff.cli import cli
-from gendiff.formatters.stylish import format_stylish
 from gendiff.modules.diff import generate_diff
 from gendiff.modules.file_extension import get_file_extension
 from gendiff.modules.parser_by_extension import get_parser_by_extension
@@ -16,8 +15,7 @@ def main():
 
     dict1 = parser1(filepath1)
     dict2 = parser2(filepath2)
-    diff_tree = generate_diff(dict1, dict2)
-    result_format = format_stylish(diff_tree)
+    result_format = generate_diff(dict1, dict2, format_name=arg.format_name)
     print(result_format)
 
 

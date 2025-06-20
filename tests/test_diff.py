@@ -1,6 +1,6 @@
-from gendiff.modules.diff import generate_diff
+from gendiff.modules.diff import build_diff_tree
 
-fun_diff = generate_diff
+fun_diff = build_diff_tree
 
 
 def test_empty_dict():
@@ -120,7 +120,10 @@ def test_nested_dicts():
             'key': 'parent',
             'status': 'nested',
             'children': [
-                {'key': 'child', 'status': 'changed', 'old_val': 1, 'new_val': 2}
+                {'key': 'child', ''
+                'status': 'changed',
+                'old_val': 1,
+                'new_val': 2}
             ]
         }
     ]

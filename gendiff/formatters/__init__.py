@@ -1,3 +1,4 @@
+from gendiff.formatters.plain import format_plain
 from gendiff.formatters.stylish import format_stylish
 
 # Определяем имя форматера по умолчанию
@@ -6,6 +7,7 @@ DEFAULT_FORMATTER = 'stylish'
 # Словарь, сопоставляющий имена форматеров с их функциями
 FORMATTERS = {
     'stylish': format_stylish,
+    'plain': format_plain,
 }
 
 

@@ -24,6 +24,8 @@ Useful for configuration management, debugging, and understanding changes betwee
 
 [![asciicast](https://asciinema.org/a/zBdCr2DgCPH7n3HjrsVmyW5rz.svg)](https://asciinema.org/a/zBdCr2DgCPH7n3HjrsVmyW5rz)
 
+[![asciicast](https://asciinema.org/a/np0Ei5fmCbkCRnvjQuM0JQwP8.svg)](https://asciinema.org/a/np0Ei5fmCbkCRnvjQuM0JQwP8)
+
 ## Installation and usage
 
 1. Make sure you have Python 3 installed.
