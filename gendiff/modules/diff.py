@@ -1,4 +1,5 @@
 from gendiff.formatters import DEFAULT_FORMATTER, get_formatter
+from gendiff.modules.file_parser import parse_file
 
 
 def build_diff_tree(dict1, dict2):
@@ -49,7 +50,7 @@ def build_diff_tree(dict1, dict2):
             })
 
         # если ключ только в dict2
-        else:  # key in dict2
+        else:
             diff_list.append({
                 "key": key,
                 "status": "added",
@@ -59,19 +60,21 @@ def build_diff_tree(dict1, dict2):
     return diff_list
 
 
-def generate_diff(dict1, dict2, format_name=DEFAULT_FORMATTER):
+def generate_diff(filepath1, filepath2, format_name=DEFAULT_FORMATTER):
     """
-    Compares two dictionaries, builds a difference tree and formats it.
+    Compares two configuration files and returns the difference in a
+    specified format.
 
     Arguments:
-    dict1 (dict): The first dictionary to compare.
-    dict2 (dict): The second dictionary to compare.
-    format_name (str): The name of the desired output format
-    (defaults to 'styli
-sh').
+    filepath1 (str): Path to the first configuration file.
+    filepath2 (str): Path to the second configuration file.
+    format_name (str): The name of the output format (default is 'stylish').
+
     Returns:
-    str: A formatted string representing the difference.
-    """
+    str: A string representing the formatted differences.
+   """
+    dict1 = parse_file(filepath1)
+    dict2 = parse_file(filepath2)
     # 1. Строим дерево различий, используя переименованную функцию
     diff_tree = build_diff_tree(dict1, dict2)
 

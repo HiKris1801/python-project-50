@@ -120,7 +120,7 @@ def test_nested_dicts():
             'key': 'parent',
             'status': 'nested',
             'children': [
-                {'key': 'child', ''
+                {'key': 'child',
                 'status': 'changed',
                 'old_val': 1,
                 'new_val': 2}
