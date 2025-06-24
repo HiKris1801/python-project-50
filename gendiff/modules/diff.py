@@ -6,9 +6,6 @@ def build_diff_tree(dict1, dict2):
     diff_list = []
     all_keys = sorted(set(dict1.keys()) | set(dict2.keys()))
 
-    if not all_keys:
-        return diff_list
-
     for key in all_keys:
         val1 = dict1.get(key)
         val2 = dict2.get(key)

@@ -4,7 +4,7 @@ from gendiff.modules.file_parser import parse_file
 
 
 def test_parse_file_json():
-    file_path = 'tests/fixtures/sample.json'
+    file_path = 'tests/fixtures/file_parser/sample.json'
     expected_data = {
         "name": "Alice",
         "age": 30,
@@ -14,7 +14,7 @@ def test_parse_file_json():
 
 
 def test_parse_file_yaml():
-    file_path = 'tests/fixtures/sample.yaml'
+    file_path = 'tests/fixtures/file_parser/sample.yaml'
     expected_data = {
         "name": "Alice",
         "age": 30,

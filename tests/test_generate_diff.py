@@ -4,8 +4,8 @@ from gendiff.modules.diff import generate_diff
 
 
 def test_generate_diff_stylish_json():
-    file1 = 'tests/fixtures/file1.json'
-    file2 = 'tests/fixtures/file2.json'
+    file1 = 'tests/fixtures/json_files/file1.json'
+    file2 = 'tests/fixtures/json_files/file2.json'
 
     expected = """{
   - follow: false
@@ -21,8 +21,8 @@ def test_generate_diff_stylish_json():
 
 
 def test_generate_diff_plain_yaml():
-    file1 = 'tests/fixtures/file1.yml'
-    file2 = 'tests/fixtures/file2.yml'
+    file1 = 'tests/fixtures/yaml_files/file1.yml'
+    file2 = 'tests/fixtures/yaml_files/file2.yml'
 
     expected = """Property 'follow' was removed
 Property 'proxy' was removed
@@ -34,8 +34,8 @@ Property 'verbose' was added with value: true"""
 
 
 def test_generate_diff_json_output():
-    file1 = 'tests/fixtures/file1.json'
-    file2 = 'tests/fixtures/file2.json'
+    file1 = 'tests/fixtures/json_files/file1.json'
+    file2 = 'tests/fixtures/json_files/file2.json'
 
     result = generate_diff(file1, file2, format_name="json")
 
