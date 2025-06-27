@@ -18,8 +18,7 @@ def get_line_prefix(depth, status_char=' '):
     return (
         f"{base_indent}"
         f"{' ' * STATUS_INDENT}"
-        f"{status_char}"
-        f"{SPACE_AFTER_STATUS}"
+        f"{status_char}{SPACE_AFTER_STATUS}"
     )
 
 
@@ -45,7 +44,7 @@ def stringify(value, depth):
     if value is None:
         return 'null'
     if isinstance(value, str) and not value:
-        return ' '  # Space for empty values
+        return ''  # Space for empty values
 
     return str(value)
 
@@ -83,16 +82,16 @@ def render_node(node, depth):
         return [f"{prefix}{key}: {value_str}"]
 
     elif status == 'changed':
-        old_prefix = get_line_prefix(depth, '-')
-        new_prefix = get_line_prefix(depth, '+')
+        removed_prefix = get_line_prefix(depth, '-')
+        added_prefix = get_line_prefix(depth, '+')
         old_value = stringify(node['old_val'], depth)
         new_value = stringify(node['new_val'], depth)
         return [
-            f"{old_prefix}{key}: {old_value}",
-            f"{new_prefix}{key}: {new_value}"
+            f"{removed_prefix}{key}: {old_value}",
+            f"{added_prefix}{key}: {new_value}"
         ]
     else:
-        raise ValueError(f"Unknown status: {status}")
+        raise ValueError(f"Unknown status: {status}")  
 
 
 def format_stylish(diff_list, depth=0):
