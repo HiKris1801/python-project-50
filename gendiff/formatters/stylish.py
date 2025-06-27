@@ -1,100 +1,109 @@
+# Constants for readability
+INDENT_SIZE = 4
+STATUS_INDENT = 2  # Spaces before status symbol
+SPACE_AFTER_STATUS = ' '  # Space after status symbol
+
+
+def get_base_indent(depth):
+    """Calculates the base indentation for the current depth level."""
+    return ' ' * (depth * INDENT_SIZE)
+
+
+def get_line_prefix(depth, status_char=' '):
+    """
+    Generates the prefix for a line, including base indentation,
+    status symbol, and space after the symbol.
+    """
+    base_indent = get_base_indent(depth)
+    return (
+        f"{base_indent}"
+        f"{' ' * STATUS_INDENT}"
+        f"{status_char}"
+        f"{SPACE_AFTER_STATUS}"
+    )
+
+
 def stringify(value, depth):
+    """
+    Converts a value to its string representation.
+    Handles dictionaries recursively, and special values (True, False, None).
+    """
     if isinstance(value, dict):
-        current_indent_level = depth * 4  # 4 пробела на каждый уровень глубины
-        next_indent_level = (depth + 1) * 4
-        item_indent = ' ' * next_indent_level
-        closing_brace_indent = ' ' * current_indent_level
+        item_indent = get_base_indent(depth + 1) + ' ' * (STATUS_INDENT + 2)
+        closing_brace_indent = get_base_indent(depth + 1)
+
         lines = ['{']
         for k, v in value.items():
             lines.append(f"{item_indent}{k}: {stringify(v, depth + 1)}")
         lines.append(f"{closing_brace_indent}}}")
         return '\n'.join(lines)
+
     if value is True:
         return 'true'
     if value is False:
         return 'false'
     if value is None:
         return 'null'
+    if isinstance(value, str) and not value:
+        return ' '  # Space for empty values
+
     return str(value)
 
 
-# Вспомогательная функция для генерации отступа
-def get_indent(depth, status_char=' '):
-    # Базовый отступ: 4 пробела на каждый уровень глубины
-    base_indent = ' ' * (depth * 4)
-    # Смещение для символа (+, -, или пробел)
-    # 2 пробела для выравнивания + символ + 1 пробел
-    # 2 пробела + символ + 1 пробел = 4 символа
-    return f"{base_indent}  {status_char} "
-
-
 def render_node(node, depth):
+    """
+    Renders a single node of the diff tree into a list of formatted strings.
+    """
     key = node['key']
     status = node['status']
 
-    # Отступ для элементов на текущем уровне
-    # отступ, который применяется перед символом (+, -, пробел)
-    base_indent = ' ' * (depth * 4)
-
     if status == 'nested':
-        # Здесь depth+1 передается в format_stylish, так как вложенный узел
-        # сам становится новым "корнем" для форматирования
-        # с увеличенной глубиной.
-        children_formatted = format_stylish(node['children'], depth + 1)
+        key_prefix = get_line_prefix(depth, ' ')
+        children = format_stylish(node['children'], depth + 1)
+        closing_brace_indent = get_base_indent(depth + 1)
 
-        # Отступ для ключа вложенного узла и его ОТКРЫВАЮЩЕЙ скобки.
-        # Это base_indent + 4 пробела (то есть, без символа)
-        key_and_open_brace_indent = f"{base_indent}    "
-
-        # Отступ для ЗАКРЫВАЮЩЕЙ скобки вложенного узла.
-        closing_brace_indent = key_and_open_brace_indent
-
-        lines = [f"{key_and_open_brace_indent}{key}: {{"]
-
-        # split('\n')[1:-1] удаляет первую и последнюю строку (скобки '{' и '}')
-        # из вложенного форматирования, так как мы их добавляем вручную.
-        lines.extend(children_formatted.split('\n')[1:-1])
+        lines = [f"{key_prefix}{key}: {{"]
+        lines.extend(children.split('\n')[1:-1])
         lines.append(f"{closing_brace_indent}}}")
         return lines
 
     elif status == 'unchanged':
-        # Отступ для неизмененных узлов (4 пробела)
-        # Используем пробел как статус-символ
-        unchanged_indent = get_indent(depth, ' ')
-        return [f"{unchanged_indent}{key}: {stringify(node['value'], depth)}"]
+        prefix = get_line_prefix(depth, ' ')
+        value_str = stringify(node['value'], depth)
+        return [f"{prefix}{key}: {value_str}"]
 
     elif status == 'added':
-        # Отступ для добавленных узлов (+ )
-        added_indent = get_indent(depth, '+')
-        return [f"{added_indent}{key}: {stringify(node['value'], depth)}"]
+        prefix = get_line_prefix(depth, '+')
+        value_str = stringify(node['value'], depth)
+        return [f"{prefix}{key}: {value_str}"]
 
     elif status == 'removed':
-        # Отступ для удаленных узлов (- )
-        removed_indent = get_indent(depth, '-')
-        return [f"{removed_indent}{key}: {stringify(node['value'], depth)}"]
+        prefix = get_line_prefix(depth, '-')
+        value_str = stringify(node['value'], depth)
+        return [f"{prefix}{key}: {value_str}"]
 
     elif status == 'changed':
-        # Отступ для удаленного старого значения (- )
-        removed_indent = get_indent(depth, '-')
-        # Отступ для добавленного нового значения (+ )
-        added_indent = get_indent(depth, '+')
+        old_prefix = get_line_prefix(depth, '-')
+        new_prefix = get_line_prefix(depth, '+')
+        old_value = stringify(node['old_val'], depth)
+        new_value = stringify(node['new_val'], depth)
         return [
-            f"{removed_indent}{key}: {stringify(node['old_val'], depth)}",
-            f"{added_indent}{key}: {stringify(node['new_val'], depth)}"
+            f"{old_prefix}{key}: {old_value}",
+            f"{new_prefix}{key}: {new_value}"
         ]
     else:
         raise ValueError(f"Unknown status: {status}")
 
 
 def format_stylish(diff_list, depth=0):
-    # Отступ для корневых скобок '{' и '}'
-    # Для depth=0, это пустая строка.
-    # Для глубины > 0, это базовый отступ для текущего уровня.
-    root_indent = ' ' * (depth * 4)
+    """
+    Formats the diff tree into a stylish string output.
+    """
+    lines = ["{"]
 
-    lines = [f"{root_indent}{{"]
     for node in diff_list:
         lines.extend(render_node(node, depth))
-    lines.append(f"{root_indent}}}")
-    return '\n'.join(lines)
 
+    lines.append("}")
+
+    return '\n'.join(lines)
