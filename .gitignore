@@ -1,8 +1,11 @@
 *.egg-info
-__pycache__
+__pycache__/
 dist/
 *.pyc
-.venv
+.venv/
 .coverage
 coverage.xml
 *_cache/
+
+/.vscode/
+hello.py
